@@ -17,6 +17,7 @@ export default function Home() {
             }).then(res => res.json()).then(data =>{
                 setFetchData(data);
             })
+            
     }
 
     const startSession = () => {
@@ -54,6 +55,9 @@ export default function Home() {
         </h1>
         <div>
             <button onClick={getReturn}>Get Return Data</button>
+        </div>
+        <div>
+            {fetchData.message}
         </div>
         <div>
             <a href='/login'>

@@ -22,7 +22,7 @@ const success = db_utils.printMySQLVersion();
 const app = express();
 app.use(cors(
     {
-        origin: "*",
+        origin: ["http://localhost:3000", "http://bxuoqrnkge.us19.qoddiapp.com"],
         methods: ["POST", "GET"],
         credentials: true
     }
@@ -57,7 +57,7 @@ app.use(session({
 }))
 
 app.get('/', (req, res) => {
-    return res.json({message: "THIS IS THE / GET 2"});
+    return res.json({message: "THIS IS THE / GET"});
 })
 
 app.post('/createAccount', async (req, res) => {
