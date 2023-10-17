@@ -21,11 +21,11 @@ const success = db_utils.printMySQLVersion();
 
 const app = express();
 app.use(cors(
-    {
-        origin: ["＊"],
-        methods: ["POST", "GET"],
-        credentials: true
-    }
+    // {
+    //     origin: ["＊"],
+    //     methods: ["POST", "GET"],
+    //     credentials: true
+    // }
 ));
 app.use(express.json());
 app.use(cookieParser());
