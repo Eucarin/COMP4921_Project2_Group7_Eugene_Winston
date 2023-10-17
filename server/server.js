@@ -22,7 +22,7 @@ const success = db_utils.printMySQLVersion();
 const app = express();
 app.use(cors(
     {
-        origin: ["http://localhost:3000", "http://bxuoqrnkge.us19.qoddiapp.com"],
+        origin: ["＊"],
         methods: ["POST", "GET"],
         credentials: true
     }
