@@ -7,7 +7,7 @@ export default function Home() {
     const [isValid, setIsValid] = useState('');
 
     const getReturn = () => {
-        fetch("http://localhost:9000/", {
+        fetch(process.env.REACT_APP_API_LINK, {
             method: 'get',
             credentials: 'include',
             mode:'cors',
@@ -20,7 +20,7 @@ export default function Home() {
     }
 
     const startSession = () => {
-        fetch("http://localhost:9000/startSession", {
+        fetch(process.env.REACT_APP_API_LINK + "/startSession", {
             method: 'post',
             credentials: 'include',
             mode:'cors',
@@ -34,7 +34,7 @@ export default function Home() {
     }
 
     const checkSessionValid = () => {
-        fetch("http://localhost:9000/checkSession", {
+        fetch(process.env.REACT_APP_API_LINK + "/checkSession", {
             method: 'get',
             credentials: 'include',
             mode:'cors',
