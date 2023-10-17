@@ -56,6 +56,14 @@ export default function Home() {
             <button onClick={getReturn}>Get Return Data</button>
         </div>
         <div>
+            <a href='/login'>
+                <button>Login</button>
+            </a>
+            <a href='/signup'>
+                <button>Sign Up</button>
+            </a>
+        </div>
+        {/* <div>
             {fetchData.message}
         </div>
 
@@ -71,7 +79,7 @@ export default function Home() {
         </div>
         <div>
             {isValid}
-        </div>
+        </div> */}
     </div>)
   
 }

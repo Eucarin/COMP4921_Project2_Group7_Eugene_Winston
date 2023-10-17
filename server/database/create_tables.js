@@ -3,91 +3,29 @@ const database = include('databaseConnection');
 async function createTables() {
 
     let createUserTypeSQL = `
-    CREATE TABLE IF NOT EXISTS user_type (
-      user_type_id INT NOT NULL AUTO_INCREMENT,
-      type VARCHAR(45) NOT NULL,
-      PRIMARY KEY (user_type_id));
+    CREATE TABLE user_type (
+        user_type_id INT NOT NULL AUTO_INCREMENT,
+        type VARCHAR(20) NOT NULL,
+        PRIMARY KEY (user_type_id));
       `
 
     // TODO: UPDATE TO USE user_type_id AS WELL
     let createUsersSQL = `
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE user (
         user_id INT NOT NULL AUTO_INCREMENT,
-        user_type_id INT NOT NULL,
         username VARCHAR(45) NOT NULL,
-        hashed_password VARCHAR(45) NOT NULL,
-        email VARCHAR(45) NOT NULL,
+        hashed_password VARCHAR(100) NOT NULL,
+        email VARCHAR(50) NOT NULL,
         profile_pic_id VARCHAR(45) NULL,
+        user_type_id INT NOT NULL DEFAULT 1,
         PRIMARY KEY (user_id),
-        UNIQUE INDEX username_UNIQUE (username ASC) VISIBLE,
-        CONSTRAINT user_user_type
+        INDEX user_user_type_id_idx (user_type_id ASC) VISIBLE,
+        CONSTRAINT user_user_type_id
           FOREIGN KEY (user_type_id)
           REFERENCES user_type (user_type_id)
           ON DELETE NO ACTION
           ON UPDATE NO ACTION);
     `;
-
-    let createContentTypeSQL = `
-    CREATE TABLE IF NOT EXISTS  content_type (
-        content_type_id INT NOT NULL AUTO_INCREMENT,
-        type VARCHAR(45) NOT NULL,
-        PRIMARY KEY (content_type_id));
-    `
-
-    let createContentSQL = `
-    CREATE TABLE IF NOT EXISTS  content (
-        content_id INT NOT NULL AUTO_INCREMENT,
-        user_id INT NOT NULL,
-        url VARCHAR(45) NOT NULL,
-        is_active TINYINT NOT NULL,
-        content_type_id INT NOT NULL,
-        content_title VARCHAR(45) NOT NULL,
-        content_data LONGTEXT NOT NULL,
-        create_date DATE NOT NULL,
-        last_hit_date DATE NULL,
-        hit_count INT NOT NULL,
-        PRIMARY KEY (content_id),
-        UNIQUE INDEX url_UNIQUE (url ASC) VISIBLE,
-        INDEX user_id_idx (user_id ASC) VISIBLE,
-        INDEX content_type_id_idx (content_type_id ASC) VISIBLE,
-        CONSTRAINT content_users
-          FOREIGN KEY (user_id)
-          REFERENCES users (user_id)
-          ON DELETE NO ACTION
-          ON UPDATE NO ACTION,
-        CONSTRAINT content_content_type
-          FOREIGN KEY (content_type_id)
-          REFERENCES content_type (content_type_id)
-          ON DELETE NO ACTION
-          ON UPDATE NO ACTION);
-    `
-
-    let createCustomUrlSQL = `
-    CREATE TABLE IF NOT EXISTS  custom_url (
-        custom_url_id INT NOT NULL AUTO_INCREMENT,
-        user_id INT NOT NULL,
-        content_id INT NOT NULL,
-        PRIMARY KEY (custom_url_id),
-        INDEX custom_url_content_idx (content_id ASC) VISIBLE,
-        INDEX custom_url_users_idx (user_id ASC) VISIBLE,
-        CONSTRAINT custom_url_content
-          FOREIGN KEY (content_id)
-          REFERENCES content (content_id)
-          ON DELETE NO ACTION
-          ON UPDATE NO ACTION,
-        CONSTRAINT custom_url_users
-          FOREIGN KEY (user_id)
-          REFERENCES users(user_id)
-          ON DELETE NO ACTION
-          ON UPDATE NO ACTION);
-    `
-
-    let createSystemVariablesSQL = `
-    CREATE TABLE systemvariables (
-        keyname VARCHAR(20) NOT NULL,
-        value INT NOT NULL,
-        PRIMARY KEY (keyname));
-        `
 
     let insertSystemSQL = `
     INSERT INTO systemvariables (keyname, thevalue) VALUES (nextContentId, 1234);
@@ -96,21 +34,14 @@ async function createTables() {
     try {
         const resultUserType = await database.query(createUserTypeSQL);
         const resultsUsers = await database.query(createUsersSQL);
-        const resultsContentType = await database.query(createContentTypeSQL);
-        const resultsContent = await database.query(createContentSQL);
-        const resultsCustomUrl = await database.query(createCustomUrlSQL);
 
-        console.log("Successfully created user table");
+
+        console.log("Successfully created user type table");
+        console.log(resultUserType[0]);
+
+        console.log("Successfully created cuser table");
         console.log(resultsUsers[0]);
 
-        console.log("Successfully created content type table");
-        console.log(resultsContentType[0]);
-
-        console.log("Successfully created content table");
-        console.log(resultsContent[0]);
-
-        console.log("Successfully created custom url table");
-        console.log(resultsCustomUrl[0]);
         return true;
     }
     catch(err) {
