@@ -21,11 +21,11 @@ const success = db_utils.printMySQLVersion();
 
 const app = express();
 app.use(cors(
-    // {
-    //     origin: ["＊"],
-    //     methods: ["POST", "GET"],
-    //     credentials: true
-    // }
+    {
+        origin: "*",
+        methods: ["POST", "GET"],
+        credentials: true
+    }
 ));
 app.use(express.json());
 app.use(cookieParser());
@@ -57,7 +57,7 @@ app.use(session({
 }))
 
 app.get('/', (req, res) => {
-    return res.json({message: "THIS IS THE / GET"});
+    return res.json({message: "THIS IS THE / GET 2"});
 })
 
 app.post('/createAccount', async (req, res) => {
