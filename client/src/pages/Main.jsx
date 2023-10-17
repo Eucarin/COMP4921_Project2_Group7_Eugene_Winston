@@ -67,6 +67,14 @@ export default function Home() {
                 <button>Sign Up</button>
             </a>
         </div>
+
+        <br/> <br/>
+        <div>
+            <button onClick={checkSessionValid}>Check Valid Session</button>
+        </div>
+        <div>
+            {isValid}
+        </div>
         {/* <div>
             {fetchData.message}
         </div>
@@ -76,13 +84,6 @@ export default function Home() {
         </div>
         <div>
             {sessionData.toString()}
-        </div>
-
-        <div>
-            <button onClick={checkSessionValid}>Check Valid Session</button>
-        </div>
-        <div>
-            {isValid}
         </div> */}
     </div>)
   
