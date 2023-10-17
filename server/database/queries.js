@@ -2,7 +2,7 @@ const database = require('./databaseConnection');
 
 async function createUser(postData) {
 	let createUserSQL = `
-		INSERT INTO user
+		INSERT INTO FROM freedb_DBForProject.user
 		(username, email, hashed_password)
 		VALUES
 		(:user, :email, :passwordHash);
@@ -31,7 +31,7 @@ async function createUser(postData) {
 async function getUser(postData) {
 	let getUserSQL = `
 		SELECT user_id, username, hashed_password, user_type_id
-		FROM user
+		FROM freedb_DBForProject.user
 		JOIN user_type USING(user_type_id)
 		WHERE username = :user;
 	`;
