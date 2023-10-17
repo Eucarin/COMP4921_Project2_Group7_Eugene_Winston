@@ -12,7 +12,7 @@ const expireTime = 60*60*1000
 const app = express();
 app.use(cors(
     {
-        origin: ["http://localhost:3000"],
+        origin: ["http://localhost:3000", "http://wljckbedyx.us19.qoddiapp.com"],
         methods: ["POST", "GET"],
         credentials: true
     }
