@@ -22,7 +22,7 @@ const success = db_utils.printMySQLVersion();
 const app = express();
 app.use(cors(
     {
-        origin: ["http://localhost:3000", "http://bxuoqrnkge.us19.qoddiapp.com"],
+        origin: ["http://localhost:3000", "http://wljckbedyx.us19.qoddiapp.com"],
         methods: ["POST", "GET"],
         credentials: true
     }
@@ -56,6 +56,8 @@ app.use(session({
     }
 }))
 
+app.use('/createPost', sessionValidation);
+
 app.get('/', (req, res) => {
     return res.json({message: "THIS IS THE / GET"});
 })
@@ -76,7 +78,6 @@ app.post('/createAccount', async (req, res) => {
   } else if(!password.match(/[!-*]/)) {
     errorMessage = "Password must contain a symbol (!, \", #, $, %, &, \', (, ), *)"
   }
-  console.log(errorMessage);
 
   if(errorMessage) {
     // Give page error message
@@ -135,13 +136,53 @@ app.post('/startSession', (req, res) => {
 })
 
 app.get('/checkSession', (req, res) => {
-    console.log(req.session);
     if(req.session.username) {
         return res.json({valid: true, session: req.session})
     } else {
         return res.json({valid: false})
     }
 })
+
+app.post('/createPost', async (req, res) => {
+    // if(req.session.authenticated === true) {
+
+    // }
+    const title = req.body.title;
+    const content = req.body.content;
+    var success = await db_queries.createPost({title: title, content: content, user_id: req.session.user_id})
+
+    if(success) {
+        return res.json({"success": true})
+    } else {
+        return res.json({"success": false, "errorMessage": "Failed to create post, please contanct admins for further details."})
+    }
+})
+
+app.get('/allPosts', async (req, res) => {
+    var results = await db_queries.getAllPost();
+    if(results) {
+        res.send({success: true, results: results});
+    } else {
+        res.send({success: false});
+    }
+})
+
+function isValidSession(req) {
+	if (req.session.authenticated) {
+		return true;
+	}
+	return false;
+}
+
+function sessionValidation(req, res, next) {
+	if (!isValidSession(req)) {
+		req.session.destroy();
+		return res.json({valid: false, destoryed: true});
+	}
+	else {
+		next();
+	}
+}
 
 app.listen(port, () => {
     console.log("Listening on port " + port);

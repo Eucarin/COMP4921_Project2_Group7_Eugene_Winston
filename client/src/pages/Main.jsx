@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import PostCard from '../components/PostCard';
 
 
 export default function Home() {
-    const [fetchData, setFetchData] = useState('');
-    const [sessionData, setSessionData] = useState('');
-    const [isValid, setIsValid] = useState('');
+    const [allPosts, setAllPosts] = useState([]);
 
-    const getReturn = () => {
-        fetch(process.env.REACT_APP_API_LINK, {
+    const getAllPosts = () => {
+        fetch(process.env.REACT_APP_API_LINK + "/allPosts", {
             method: 'get',
             credentials: 'include',
             mode:'cors',
@@ -15,76 +14,26 @@ export default function Home() {
                 "Content-Type": "application/json"
             },
             }).then(res => res.json()).then(data =>{
-                setFetchData(data);
+                setAllPosts(data.results);
             })
             
     }
 
-    const startSession = () => {
-        fetch(process.env.REACT_APP_API_LINK + "/startSession", {
-            method: 'post',
-            credentials: 'include',
-            mode:'cors',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            }).then(res => res.json()).then(data =>{
-                console.log(data);
-                setSessionData(data);
-            })
-    }
+    useEffect(() => {
+        getAllPosts();
+    }, [])
 
-    const checkSessionValid = () => {
-        fetch(process.env.REACT_APP_API_LINK + "/checkSession", {
-            method: 'get',
-            credentials: 'include',
-            mode:'cors',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            }).then(res => res.json()).then(data =>{
-                console.log(data);
-                setIsValid(data.success);
-            })
+    const AllPosts = () => {
+        const arrPosts = [];
+        for(let i = 0; i < allPosts.length; i++) {
+            arrPosts.push(<PostCard postData={allPosts[i]} key={i}/>)
+        }
+        return arrPosts;
     }
 
     return (
-    <div>
-        <h1>
-            THIS IS THE HOME PAGE
-        </h1>
         <div>
-            <button onClick={getReturn}>Get Return Data</button>
-        </div>
-        <div>
-            {fetchData.message}
-        </div>
-        <div>
-            <a href='/login'>
-                <button>Login</button>
-            </a>
-            <a href='/signup'>
-                <button>Sign Up</button>
-            </a>
-        </div>
-
-        <br/> <br/>
-        <div>
-            <button onClick={checkSessionValid}>Check Valid Session</button>
-        </div>
-        <div>
-            {isValid}
-        </div>
-        {/* <div>
-            {fetchData.message}
-        </div>
-
-        <div>
-            <button onClick={startSession}>Start Session</button>
-        </div>
-        <div>
-            {sessionData.toString()}
-        </div> */}
-    </div>)
+            <AllPosts/>
+        </div>)
   
 }

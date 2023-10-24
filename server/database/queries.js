@@ -52,4 +52,50 @@ async function getUser(postData) {
 	}
 }
 
-module.exports = {createUser, getUser};
+async function createPost(postData) {
+	let createPostSQL = `
+		INSERT INTO post
+		(title, content, post_datetime, user_id)
+		VALUES
+		(:title, :content, :post_datetime, :user_id);
+	`;
+	// Default user_type to 1 and profile_pic to null?
+	let params = {
+		title: postData.title,
+		content: postData.content,
+		post_datetime: new Date(),
+		user_id: postData.user_id,
+	}
+	
+	try {
+		await database.query(createPostSQL, params);
+
+		return true;
+	}
+	catch(err) {
+		console.log("Error inserting post");
+        console.log(err);
+		return false;
+	}
+}
+
+async function getAllPost() {
+	let getAllPostSQL = `
+		SELECT *
+		FROM post;
+	`;
+
+	try {
+		const results = await database.query(getAllPostSQL);
+
+		return results[0];
+	}
+	catch(err) {
+		console.log("Error trying to get all posts");
+        console.log(err);
+		return false;
+	}
+}
+
+
+module.exports = {createUser, getUser, createPost, getAllPost};

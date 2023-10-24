@@ -9,7 +9,6 @@ async function createTables() {
         PRIMARY KEY (user_type_id));
       `
 
-    // TODO: UPDATE TO USE user_type_id AS WELL
     let createUsersSQL = `
     CREATE TABLE user (
         user_id INT NOT NULL AUTO_INCREMENT,
@@ -27,6 +26,46 @@ async function createTables() {
           ON UPDATE NO ACTION);
     `;
 
+    let createPostSQL = `
+    CREATE TABLE post (
+        post_id INT NOT NULL AUTO_INCREMENT,
+        title VARCHAR(45) NOT NULL,
+        content TEXT NOT NULL,
+        post_datetime DATE NOT NULL,
+        like_count INT NOT NULL DEFAULT 0,
+        dislike_count INT NOT NULL DEFAULT 0,
+        user_id INT NOT NULL,
+        PRIMARY KEY (post_id),
+        INDEX post_user_id_idx (user_id ASC) VISIBLE,
+        CONSTRAINT post_user_id
+          FOREIGN KEY (user_id)
+          REFERENCES user (user_id)
+          ON DELETE NO ACTION
+          ON UPDATE NO ACTION);
+    `;
+
+    let createClosureSQL = `
+    CREATE TABLE closure_post (
+        closure_post_id INT NOT NULL AUTO_INCREMENT,
+        parent_post_id INT NULL,
+        child_post_id INT NULL,
+        depth INT NOT NULL DEFAULT 0,
+        PRIMARY KEY (closure_post_id),
+        INDEX child_post_post_id_idx (child_post_id ASC) VISIBLE,
+        INDEX parent_post_post_id_idx (parent_post_id ASC) VISIBLE,
+        CONSTRAINT child_post_post_id
+          FOREIGN KEY (child_post_id)
+          REFERENCES post (post_id)
+          ON DELETE NO ACTION
+          ON UPDATE NO ACTION,
+        CONSTRAINT parent_post_post_id
+          FOREIGN KEY (parent_post_id)
+          REFERENCES post (post_id)
+          ON DELETE NO ACTION
+          ON UPDATE NO ACTION);
+      
+    `;
+
     let insertSystemSQL = `
     INSERT INTO systemvariables (keyname, thevalue) VALUES (nextContentId, 1234);
     `
@@ -34,13 +73,21 @@ async function createTables() {
     try {
         const resultUserType = await database.query(createUserTypeSQL);
         const resultsUsers = await database.query(createUsersSQL);
+        const resultPost = await database.query(createPostSQL);
+        const resultClosure = await database.query(createClosureSQL);
 
 
         console.log("Successfully created user type table");
         console.log(resultUserType[0]);
 
-        console.log("Successfully created cuser table");
+        console.log("Successfully created user table");
         console.log(resultsUsers[0]);
+
+        console.log("Successfully created post table");
+        console.log(resultPost[0]);
+
+        console.log("Successfully created closure table");
+        console.log(resultClosure[0]);
 
         return true;
     }

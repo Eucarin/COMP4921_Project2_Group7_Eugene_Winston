@@ -4,6 +4,7 @@ import Layout from "./pages/Layout";
 import Main from "./pages/Main";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import NewPost from './pages/NewPost';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <Route index element={<Main />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        {/* <Route path="signup" element={<SignUp />} /> */}
+        <Route path='/createPost' element={<NewPost/>} />
       </Route>
     </Routes>
   </BrowserRouter>

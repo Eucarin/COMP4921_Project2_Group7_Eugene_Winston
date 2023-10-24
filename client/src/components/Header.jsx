@@ -73,7 +73,7 @@ export default function Header() {
         {/* Login/Logout Button*/}
         {!isValid && <LoginButton/>}
         {/* Post Button */}
-        {!isValid && <PostButton/>}
+        {isValid && <PostButton/>}
         <div className='col-start-5 flex justify-end mr-10'>
           <button className='my-5 p-2 border hover:bg-green-500 text-white font-semibold rounded-lg'><a href='/userPage'>Profile</a></button>
         </div>
