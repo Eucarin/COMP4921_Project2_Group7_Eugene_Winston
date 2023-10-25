@@ -98,7 +98,8 @@ async function createTables() {
     }
 }
 
-/* Stored functions
+/* 
+Stored functions
   delimiter $$
   drop function if exists `initials`$$
   CREATE FUNCTION `initials`(str text, expr text) RETURNS text CHARSET utf8mb4
@@ -149,6 +150,24 @@ async function createTables() {
   RETURN (contentId);
   END $$
   DELIMITER ;
+
+TRIGGER
+    DELIMITER $$
+    CREATE TRIGGER insert_post AFTER INSERT ON post
+    FOR EACH ROW
+    BEGIN
+        IF NEW.title IS NOT NULL THEN
+            INSERT INTO closure_post (parent_post_id, child_post_id, depth)
+            VALUES (NEW.post_id, NEW.post_id, 0);
+        ELSEIF NEW.title IS NULL THEN
+            INSERT INTO closure_post (parent_post_id, child_post_id, depth)
+            SELECT parent_post_id, NEW.post_id
+            FROM closure_post
+            WHERE parent_post_id = # HOW DO I FIND THE PARENT_ID HERE?
+            UNION ALL SELECT NEW.post_id, NEW.post_id;
+        END IF;
+    END
+    DELIMITER ;
 */
 
 module.exports = {createTables};

@@ -159,13 +159,17 @@ app.post('/createPost', async (req, res) => {
 })
 
 app.get('/allPosts', async (req, res) => {
-    var results = await db_queries.getAllPost();
+    const results = await db_queries.getAllPost();
     if(results) {
         res.send({success: true, results: results});
     } else {
         res.send({success: false});
     }
 })
+
+// app.get('/postUrl', async (req, res) => {
+//     const results = await db_queries.
+// })
 
 function isValidSession(req) {
 	if (req.session.authenticated) {

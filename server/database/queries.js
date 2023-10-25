@@ -66,9 +66,20 @@ async function createPost(postData) {
 		post_datetime: new Date(),
 		user_id: postData.user_id,
 	}
+
+	let insertClosureSQL = `
+	INSERT INTO closure_post (parent_post_id, child_post_id, depth)
+    VALUES (:post_id, :post_id, 0);
+	`
 	
 	try {
-		await database.query(createPostSQL, params);
+		const result = await database.query(createPostSQL, params);
+
+		let paramsTwo = {
+			post_id: result[0].insertId
+		}
+
+		await database.query(insertClosureSQL, paramsTwo);
 
 		return true;
 	}
