@@ -31,6 +31,7 @@ async function createTables() {
         post_id INT NOT NULL AUTO_INCREMENT,
         title VARCHAR(45) NOT NULL,
         content TEXT NOT NULL,
+        url VARCHAR(30) NOT NULL,
         post_datetime DATE NOT NULL,
         like_count INT NOT NULL DEFAULT 0,
         dislike_count INT NOT NULL DEFAULT 0,
@@ -63,7 +64,6 @@ async function createTables() {
           REFERENCES post (post_id)
           ON DELETE NO ACTION
           ON UPDATE NO ACTION);
-      
     `;
 
     let insertSystemSQL = `

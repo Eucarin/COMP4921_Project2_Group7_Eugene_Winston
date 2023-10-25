@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react'
-// ? Should we make threads clickable? To see comments? or put in the work to make them expandable?
+import { useNavigate } from "react-router-dom";
+
 export default function PostCard({postData}) {
-    // const [postTitle, setPostTitle] = useState('DEFAULT TITLE');
-    // const [postContent, setPostContent] = useState('CONTENT GOES HERE');
+    let navigate = useNavigate(); 
+    const routeChange = () =>{ 
+      let path = `/` + postData.url; 
+      navigate(path);
+    }
 
-
-
-    // useEffect(() => {
-
-    // }, [])
+    function handleClick(event) {
+        event.preventDefault();
+        if (postData.content) {
+          routeChange();
+        }
+      }
 
     return (
-        <div className='border border-black p-3'>
+        <div className='border border-black p-3 hover:cursor-pointer' onClick={handleClick}>
             {/* Title */}
             <div className='font-semibold'>
                 {postData.title}

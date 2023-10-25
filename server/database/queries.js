@@ -55,9 +55,9 @@ async function getUser(postData) {
 async function createPost(postData) {
 	let createPostSQL = `
 		INSERT INTO post
-		(title, content, post_datetime, user_id)
+		(title, content, post_datetime, user_id, url)
 		VALUES
-		(:title, :content, :post_datetime, :user_id);
+		(:title, :content, :post_datetime, :user_id, GetContentId(:title));
 	`;
 	// Default user_type to 1 and profile_pic to null?
 	let params = {
