@@ -90,6 +90,29 @@ async function createPost(postData) {
 	}
 }
 
+async function getPostWithURL(postData) {
+	let getPostSQL = `
+		SELECT title, content, post_datetime, like_count, dislike_count, user_id, username
+		FROM freedb_DBForProject2.post
+		JOIN user USING (user_id)
+		WHERE url = :url;
+	`;
+
+	let params = {
+		url: postData.url,
+	}
+
+	try {
+		const results = await database.query(getPostSQL, params);
+		return results[0][0];
+	}
+	catch(err) {
+		console.log("Error trying to get post data");
+        console.log(err);
+		return false;
+	}
+}
+
 async function getAllPost() {
 	let getAllPostSQL = `
 		SELECT *
@@ -109,4 +132,4 @@ async function getAllPost() {
 }
 
 
-module.exports = {createUser, getUser, createPost, getAllPost};
+module.exports = {createUser, getUser, createPost, getAllPost, getPostWithURL};
