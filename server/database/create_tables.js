@@ -46,25 +46,69 @@ async function createTables() {
     `;
 
     let createClosureSQL = `
-    CREATE TABLE closure_post (
-        closure_post_id INT NOT NULL AUTO_INCREMENT,
-        parent_post_id INT NULL,
-        child_post_id INT NULL,
+    CREATE TABLE closure_comment (
+        closure_comment_id INT NOT NULL AUTO_INCREMENT,
+        parent_comment_id INT NULL,
+        child_comment_id INT NULL,
         depth INT NOT NULL DEFAULT 0,
-        PRIMARY KEY (closure_post_id),
-        INDEX child_post_post_id_idx (child_post_id ASC) VISIBLE,
-        INDEX parent_post_post_id_idx (parent_post_id ASC) VISIBLE,
-        CONSTRAINT child_post_post_id
-          FOREIGN KEY (child_post_id)
-          REFERENCES post (post_id)
+        PRIMARY KEY (closure_comment_id),
+        INDEX child_comment_comment_id_idx (child_comment_id ASC) VISIBLE,
+        INDEX parent_comment_comment_id_idx (parent_comment_id ASC) VISIBLE,
+        CONSTRAINT child_comment_comment_id
+          FOREIGN KEY (child_comment_id)
+          REFERENCES comments (comment_id)
           ON DELETE NO ACTION
           ON UPDATE NO ACTION,
-        CONSTRAINT parent_post_post_id
-          FOREIGN KEY (parent_post_id)
-          REFERENCES post (post_id)
+        CONSTRAINT parent_comment_comment_id
+          FOREIGN KEY (parent_comment_id)
+          REFERENCES comments (comment_id)
           ON DELETE NO ACTION
           ON UPDATE NO ACTION);
     `;
+
+    let createCommentSQL = `
+    CREATE TABLE comments (
+        comment_id INT NOT NULL AUTO_INCREMENT,
+        content TEXT NOT NULL,
+        comment_datetime DATETIME NOT NULL,
+        like_count INT NOT NULL,
+        dislike_count INT NOT NULL,
+        user_id INT NOT NULL,
+        post_id INT NOT NULL,
+        PRIMARY KEY (comment_id),
+        INDEX comment_post_id_idx (post_id ASC) VISIBLE,
+        INDEX comment_user_id_idx (user_id ASC) VISIBLE,
+        CONSTRAINT comment_post_id
+          FOREIGN KEY (post_id)
+          REFERENCES post (post_id)
+          ON DELETE NO ACTION
+          ON UPDATE NO ACTION,
+        CONSTRAINT comment_user_id
+          FOREIGN KEY (user_id)
+          REFERENCES user (user_id)
+          ON DELETE NO ACTION
+          ON UPDATE NO ACTION);
+      `
+
+      let createPostCommentSQL = `
+      CREATE TABLE comment_tree (
+        comment_tree_id INT NOT NULL AUTO_INCREMENT,
+        comment_id INT NOT NULL,
+        parent_comment_id INT NOT NULL,
+        PRIMARY KEY (comment_tree_id),
+        INDEX comment_tree_comment_id_idx (comment_id ASC) VISIBLE,
+        INDEX comment_tree_comment_parent_id_idx (parent_comment_id ASC) VISIBLE,
+        CONSTRAINT comment_tree_comment_id
+          FOREIGN KEY (comment_id)
+          REFERENCES comments (comment_id)
+          ON DELETE NO ACTION
+          ON UPDATE NO ACTION,
+        CONSTRAINT comment_tree_comment_parent_id
+          FOREIGN KEY (parent_comment_id)
+          REFERENCES comments (comment_id)
+          ON DELETE NO ACTION
+          ON UPDATE NO ACTION);
+      `
 
     let insertSystemSQL = `
     INSERT INTO systemvariables (keyname, thevalue) VALUES (nextContentId, 1234);
@@ -168,6 +212,23 @@ TRIGGER
         END IF;
     END
     DELIMITER ;
+
+
+
+DELIMITER $$
+
+    CREATE TRIGGER after_comment_tree_insert
+    AFTER INSERT
+    ON comment_tree FOR EACH ROW
+    BEGIN
+        IF NEW.comment_id != NEW.parent_comment_id THEN
+            UPDATE comments
+            SET reply_count = reply_count + 1
+            WHERE comment_id = NEW.parent_comment_id;
+        END IF;
+    END$$
+
+DELIMITER ;
 */
 
 module.exports = {createTables};

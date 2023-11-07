@@ -152,9 +152,73 @@ app.post('/createPost', async (req, res) => {
     var success = await db_queries.createPost({title: title, content: content, user_id: req.session.user_id})
 
     if(success) {
-        return res.json({"success": true})
+        return res.json({success: true})
     } else {
-        return res.json({"success": false, "errorMessage": "Failed to create post, please contanct admins for further details."})
+        return res.json({success: false, errorMessage: "Failed to create post, please contanct admins for further details."})
+    }
+})
+
+app.post('/createComment', async (req, res) => {
+    if(req.session.authenticated === false) {
+        return res.json({success: false, errorMessage: "Please sign in to comment on posts."})
+    }
+    const content = req.body.content;
+    const post_id = req.body.post_id;
+    const parent_comment_id = req.body.parent_comment_id;
+    var success = await db_queries.createComment({content: content, user_id: req.session.user_id, post_id: post_id, parent_comment_id: parent_comment_id})
+
+    if(success) {
+        return res.json({success: true})
+    } else {
+        return res.json({success: false, errorMessage: "Failed to create comment, please contanct admins for further details."})
+    }
+})
+
+app.post('/replyComment', async (req, res) => {
+    // if(req.session.authenticated === true) {
+
+    // }
+    const content = req.body.content;
+    const post_id = req.body.post_id;
+    const parent_comment_id = req.body.parent_comment_id;
+    var success = await db_queries.createComment({content: content, user_id: req.session.user_id, post_id: post_id, parent_comment_id: parent_comment_id})
+
+    if(success) {
+        return res.json({success: true})
+    } else {
+        return res.json({success: false, errorMessage: "Failed to create reply to comment, please contanct admins for further details."})
+    }
+})
+
+app.post('/commentReplies', async (req, res) => {
+    const post_id = req.body.post_id;
+    const final_dest = req.body.final_dest;
+
+    const results = await db_queries.getRecursiveReplies({post_id: post_id, final_dest: final_dest})
+    if(results) {
+        res.send({success: true, results: results});
+    } else {
+        res.send({success: false});
+    }
+})
+
+app.get('/getComment/:comment_id', async (req, res) => {
+    const comment_id = req.params.comment_id;
+    const results = await db_queries.getComment({comment_id: comment_id})
+    if(results) {
+        res.send({success: true, results: results});
+    } else {
+        res.send({success: false});
+    }
+})
+
+app.get('/allComments/:post_id', async (req, res) => {
+    const post_id = req.params.post_id;
+    const results = await db_queries.getAllComments({post_id: post_id})
+    if(results) {
+        res.send({success: true, results: results});
+    } else {
+        res.send({success: false});
     }
 })
 
