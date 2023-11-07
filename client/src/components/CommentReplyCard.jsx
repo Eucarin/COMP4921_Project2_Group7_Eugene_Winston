@@ -27,6 +27,9 @@ export default function CommentReplyCard({postData}) {
             }).then(res => res.json()).then(data =>{
                 console.log(data);
             })
+
+        setNewComment('');
+        window.location.reload(false);
     }
 
     useEffect(() => {

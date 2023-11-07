@@ -29,6 +29,7 @@ export default function CommentCard({postData}) {
                 })
             
             setNewComment('');
+            window.location.reload(false);
         }
     }
 
@@ -52,16 +53,7 @@ export default function CommentCard({postData}) {
     }
 
     function checkSubset(base, check) {
-        console.log()
-        console.log(base)
-        console.log(check);
         return check.every(item => base.includes(item));
-        for (let i = check.length - 2; i >= 0; i--) {
-            if (base.includes(check[i])) {
-                return true;
-            }
-        }
-        return false;
     }
 
     const AllReplies = () => {
@@ -72,9 +64,11 @@ export default function CommentCard({postData}) {
                 continue;
             } else {
                 for(let j = replies[i].destinations.length - 2; j > -1; j--) {
-                    arrReplies.push(<CommentReplyCard postData={{comment_id: replies[i].destinations[j], 
-                                                                 depth: j - replies[i].depth, 
-                                                                 post_id: postData.post_id}} key={replies[i].destinations[j]}/>)
+                    if (!lastSet.includes(replies[i].destinations[j])) {
+                        arrReplies.push(<CommentReplyCard postData={{comment_id: replies[i].destinations[j], 
+                            depth: j - replies[i].depth, 
+                            post_id: postData.post_id}} key={replies[i].destinations[j]}/>)
+                    }
                 }
                 lastSet = Array.from(new Set([...lastSet, ...replies[i].destinations]));
             }

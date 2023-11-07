@@ -70,6 +70,7 @@ export default function PostPage() {
                 })
             
             setNewComment('');
+            window.location.reload(false);
         }
     }
 
