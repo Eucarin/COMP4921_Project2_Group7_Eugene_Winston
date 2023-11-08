@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}

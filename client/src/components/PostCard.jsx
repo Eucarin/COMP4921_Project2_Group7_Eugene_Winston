@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useNavigate } from "react-router-dom";
 
 export default function PostCard({postData}) {
@@ -16,15 +16,17 @@ export default function PostCard({postData}) {
       }
 
     return (
-        <div className='border border-black p-3 hover:cursor-pointer' onClick={handleClick}>
+      <div className="p-3 px-10">
+        <div className='border-8 p-5 hover:cursor-pointer border-funny-yellow rounded-lg bg-black' onClick={handleClick}>
             {/* Title */}
-            <div className='font-semibold'>
+            <div className='font-semibold text-funny-grey pb-2 text-lg'>
                 {postData.title}
             </div>
             {/* Content */}
-            <div>
+            <div className='text-funny-grey'>
                 {postData.content}
             </div>
+        </div>
         </div>
     )
 }

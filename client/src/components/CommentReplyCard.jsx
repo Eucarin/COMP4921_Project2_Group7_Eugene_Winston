@@ -55,7 +55,7 @@ export default function CommentReplyCard({postData}) {
     }
 
     return (
-        <div className='border border-black border-dotted p-3'>
+        <div className='border border-funny-purple border-dotted p-3'>
             <div className="flex items-center">
                 <DepthArray/>
                 -----{'>'}

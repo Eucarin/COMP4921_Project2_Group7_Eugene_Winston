@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import Login from '../pages/Login';
-import SignUp from '../pages/SignUp';
 
 export default function Header() {
   const [isValid, setIsValid] = useState(false);
@@ -68,7 +67,7 @@ export default function Header() {
     return (
       <div className='col-start-3 flex justify-end mr-10'>
         <button
-          className='my-5 p-2 border hover:bg-green-500 text-white font-semibold rounded-lg'
+          className='my-5 p-2 border hover:bg-funny-green text-funny-grey font-semibold rounded-lg'
           onClick={openModal}>
           Login
         </button>
@@ -78,27 +77,36 @@ export default function Header() {
 
   const PostButton = () => {
     return (
-      <div className='col-start-4 flex justify-end mr-10'>
-        <button className='my-5 p-2 border hover-bg-green-500 text-white font-semibold rounded-lg'>
+      <div className='col-start-3 row-start-1 flex justify-end mr-10'>
+        <button className='my-5 p-2 border hover:bg-funny-green text-funny-grey font-semibold rounded-lg'>
           <a href='/createPost'>Create Post</a>
         </button>
       </div>
     )
   }
 
-
   const SignOutButton = () =>{
     return (
-      <div className='col-start-5 flex justify-end mr-10'>
-        <button className='my-5 p-2 border hover:bg-green-500 text-white font-semibold rounded-lg' onClick={handleSignOut}>Sign Out</button>
+      <div className='col-start-6 flex justify-end mr-10'>
+        <button className='my-5 p-2 border hover:bg-funny-green text-funny-grey font-semibold rounded-lg' onClick={handleSignOut}>Sign Out</button>
+      </div>
+    )
+  }
+
+  const ProfileButton = () => {
+    return (
+      <div className='col-start-5 row-start-1 flex justify-end mr-10'>
+        <button className='my-5 p-2 border hover:bg-funny-green text-funny-grey font-semibold rounded-lg'>
+          <a href='/userPage'>Profile</a>
+        </button>
       </div>
     )
   }
 
   return (
-    <div className='bg-green-400 grid grid-cols-3 items-center w-full p-2 align-middle shadow-2xl'>
+    <div className='bg-gray-900 grid grid-cols-3 items-center w-full p-2 align-middle shadow-2xl'>
       {/* Logo? */}
-      <div className='col-start-1 text-white text-4xl px-4 cursor-pointer' onClick={navMain}>
+      <div className='col-start-1 text-funny-grey text-4xl px-4 cursor-pointer' onClick={navMain}>
         Reddit 2.0
       </div>
       {/* Search Bar */}
@@ -120,25 +128,22 @@ export default function Header() {
           <input
             type='text'
             placeholder='Search'
-            className='w-[500px] mx-auto py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600'
+            className='w-[500px] mx-auto py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-funny-grey focus:bg-funny-grey focus:border-indigo-600'
           />
         </div>
       </form>
       {/* Login/Logout Button */}
       {!isValid && <LoginButton />}
+      {isValid && <SignOutButton />}
       {/* Post Button */}
       {isValid && <PostButton />}
-      <div className='col-start-5 flex justify-end mr-10'>
-        <button className='my-5 p-2 border hover-bg-green-500 text-white font-semibold rounded-lg'>
-          <a href='/userPage'>Profile</a>
-        </button>
-      </div>
+      {isValid && <ProfileButton />}
       
       {/* Render the Login modal using React Portals */}
       {showModal && (
         ReactDOM.createPortal(
-          <div className='modal-overlay' onClick={closeModal}>
-            <div className='modal-content' onClick={(e) => e.stopPropagation()}>
+          <div className='fixed top-0 left-0 w-full h-full flex justify-center items-center z-999 modal-overlay' onClick={closeModal}>
+            <div className='rounded shadow-md shadow-black z-1000' onClick={(e) => e.stopPropagation()}>
               <Login />
             </div>
           </div>,
