@@ -18,6 +18,24 @@ export default function Header() {
         })
   }
 
+  function handleSignOut(event) {
+    event.preventDefault();
+    fetch(process.env.REACT_APP_API_LINK + "/signOut", {
+      method: 'post',
+      credentials: 'include',
+      mode:'cors',
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(res => res.json()).then(data =>{
+      if(data.success) {
+        window.location.reload(false);
+      } else {
+        console.log(data.errorMessage);
+      }
+    })
+  }
+
   useEffect(() => {
     checkSessionValid();
   }, [])
@@ -47,6 +65,14 @@ export default function Header() {
   }
 
 
+  const SignOutButton = () =>{
+    return (
+      <div className='col-start-5 flex justify-end mr-10'>
+        <button className='my-5 p-2 border hover:bg-green-500 text-white font-semibold rounded-lg' onClick={handleSignOut}>Sign Out</button>
+      </div>
+    )
+  }
+
   return (
     <div className='bg-green-400 grid grid-cols-3 items-center w-full p-2 align-middle shadow-2xl'>
         {/* Logo? */}
@@ -74,9 +100,7 @@ export default function Header() {
         {!isValid && <LoginButton/>}
         {/* Post Button */}
         {isValid && <PostButton/>}
-        <div className='col-start-5 flex justify-end mr-10'>
-          <button className='my-5 p-2 border hover:bg-green-500 text-white font-semibold rounded-lg'><a href='/userPage'>Profile</a></button>
-        </div>
+        {isValid && <SignOutButton/>}
     </div>
   )
 }

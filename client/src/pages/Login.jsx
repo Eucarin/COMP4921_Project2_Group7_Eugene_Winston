@@ -6,7 +6,7 @@ export default function Login() {
   let navigate = useNavigate(); 
   const routeChange = () =>{ 
     let path = `/`; 
-    navigate(path);
+    navigate(path, {replace: true});
   }
 
   const [username, setUsername] = useState('');
@@ -29,10 +29,15 @@ export default function Login() {
       body: JSON.stringify(accountData)
     }).then(res => res.json()).then(data =>{
       console.log(data);
+      if(!data.success) {
+        window.alert(data.errorMessage);
+    } else {
+        routeChange();
+    }
     })
 
 
-    routeChange();
+    //routeChange();
   }
 
   return (

@@ -30,8 +30,8 @@ export default function SignUp() {
       body: JSON.stringify(accountData)
     }).then(res => res.json()).then(data =>{
       if(data.success) {
-        let path = `/`; 
-        navigate(path);
+        let path = `/login`; 
+        navigate(path, {replace: true});
       } else {
         console.log(data.errorMessage);
       }

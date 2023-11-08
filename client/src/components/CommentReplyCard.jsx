@@ -4,8 +4,6 @@ export default function CommentReplyCard({postData}) {
     const [newComment, setNewComment] = useState('');
     const [commentData, setCommentData] = useState({});
 
-    let tabSpaceClass = `flex items-center pl-[${-60 * postData.depth}px]`;
-
     const apiNewCommentPost = process.env.REACT_APP_API_LINK + "/createComment";
     const apiGetCommentData = process.env.REACT_APP_API_LINK + "/getComment/";
 
@@ -25,11 +23,14 @@ export default function CommentReplyCard({postData}) {
             },
             body: JSON.stringify(newCommentData),
             }).then(res => res.json()).then(data =>{
-                console.log(data);
+                if(!data.success) {
+                    window.alert(data.errorMessage);
+                } else {
+                    window.location.reload(false);
+                }
             })
 
         setNewComment('');
-        window.location.reload(false);
     }
 
     useEffect(() => {
@@ -45,9 +46,18 @@ export default function CommentReplyCard({postData}) {
             })
     }, [])
 
+    const DepthArray = () =>{
+        const blankArr = [];
+        for (let i = 0; i < -postData.depth; i++){
+            blankArr.push(<div className='w-10'></div>);
+        }
+        return blankArr;
+    }
+
     return (
         <div className='border border-black border-dotted p-3'>
-            <div className={tabSpaceClass}>
+            <div className="flex items-center">
+                <DepthArray/>
                 -----{'>'}
                 <div className='flex flex-col pl-[12px]'>
                     {/* Title */}
