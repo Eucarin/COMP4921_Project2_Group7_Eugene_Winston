@@ -1,13 +1,19 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import CommentReplyCard from './CommentReplyCard';
 
 export default function CommentCard({postData}) {
     const [newComment, setNewComment] = useState('');
     const [replies, setReplies] = useState([]);
-    let visibleReplies = false;
+
+    const [visibleReplies, setVisibleReplies]= useState(true);
 
     const apiNewCommentPost = process.env.REACT_APP_API_LINK + "/createComment";
     const apiGetCommentReplies = process.env.REACT_APP_API_LINK + "/commentReplies";
+
+    useEffect(() =>{
+        handleViewReplies();
+    }, [])
+    
     function handleNewCommentSubmit(event) {
         event.preventDefault();
         if(newComment.trim() !== '') {
@@ -25,11 +31,15 @@ export default function CommentCard({postData}) {
                 },
                 body: JSON.stringify(newCommentData),
                 }).then(res => res.json()).then(data =>{
-                    console.log(data);
+                    if(!data.success) {
+                        window.alert(data.errorMessage);
+                    } else {
+                        window.location.reload(false);
+                    }
                 })
             
             setNewComment('');
-            window.location.reload(false);
+            //window.location.reload(false);
         }
     }
 
@@ -48,7 +58,6 @@ export default function CommentCard({postData}) {
             body: JSON.stringify(commentData),
             }).then(res => res.json()).then(data =>{
                 setReplies(data.results);
-                visibleReplies = true;
             })
     }
 
@@ -98,8 +107,8 @@ export default function CommentCard({postData}) {
                 </form>
             </div>
             {postData.reply_count > 0 ? 
-                <button type='submit' className='border border-black' onClick={handleViewReplies}>
-                    See Replies
+                <button type='submit' className='border border-black' onClick={() => {setVisibleReplies(!visibleReplies); console.log(visibleReplies ? "" : <AllReplies/>)}}>
+                    {visibleReplies? "See Replies" : "Hide Replies"}
                 </button>
             
             : ""}

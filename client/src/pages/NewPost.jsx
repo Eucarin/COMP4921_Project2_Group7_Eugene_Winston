@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-
+import Header from '../components/Header';
 
 export default function NewPost() {
     const [postTitle, setPostTitle] = useState('');
@@ -27,6 +27,7 @@ export default function NewPost() {
 
     return (
         <div>
+            <Header/>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Title</label>

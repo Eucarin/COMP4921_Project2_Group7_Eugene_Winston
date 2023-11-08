@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from 'react'
 import { useLocation } from "react-router-dom";
 import CommentCard from '../components/CommentCard';
+import Header from '../components/Header';
 
 export default function PostPage() {
     const [postData, setPostData] = useState({});
@@ -66,16 +67,20 @@ export default function PostPage() {
                 },
                 body: JSON.stringify(newCommentData),
                 }).then(res => res.json()).then(data =>{
-                    console.log(data);
+                    if(!data.success) {
+                        window.alert(data.errorMessage);
+                    } else {
+                        window.location.reload(false);
+                    }
                 })
             
             setNewComment('');
-            window.location.reload(false);
         }
     }
 
     return (
         <div>
+            <Header/>
             <h1>POST PAGE</h1>
             <div>
                 {postData.title}

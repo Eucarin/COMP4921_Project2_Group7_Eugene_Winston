@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import PostCard from '../components/PostCard';
+import { useNavigate } from 'react-router-dom';
+import Header from "../components/Header";
 
 
 export default function Home() {
     const [allPosts, setAllPosts] = useState([]);
+    let navigate = useNavigate(); 
 
     const getAllPosts = () => {
         fetch(process.env.REACT_APP_API_LINK + "/allPosts", {
@@ -33,6 +36,7 @@ export default function Home() {
 
     return (
         <div>
+            <Header/>
             <AllPosts/>
         </div>)
   

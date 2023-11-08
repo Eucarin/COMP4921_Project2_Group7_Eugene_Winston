@@ -128,6 +128,11 @@ app.post('/login', async function(req, res, next) {
     }
 });
 
+app.post('/signOut', async function(req, res, next) {
+    req.session.destroy();
+    return res.json({success: true})
+});
+
 app.post('/startSession', (req, res) => {
     const username = "WONTON";
     req.session.username = username;
@@ -159,9 +164,11 @@ app.post('/createPost', async (req, res) => {
 })
 
 app.post('/createComment', async (req, res) => {
-    if(req.session.authenticated === false) {
+    console.log(req.session.authenticated);
+    if(!req.session.authenticated) {
         return res.json({success: false, errorMessage: "Please sign in to comment on posts."})
     }
+
     const content = req.body.content;
     const post_id = req.body.post_id;
     const parent_comment_id = req.body.parent_comment_id;
@@ -175,9 +182,10 @@ app.post('/createComment', async (req, res) => {
 })
 
 app.post('/replyComment', async (req, res) => {
-    // if(req.session.authenticated === true) {
+    if(req.session.authenticated == false) {
+        return res.json({success: false, errorMessage: "No user signed in, please sign in to comment"})
+    }
 
-    // }
     const content = req.body.content;
     const post_id = req.body.post_id;
     const parent_comment_id = req.body.parent_comment_id;
