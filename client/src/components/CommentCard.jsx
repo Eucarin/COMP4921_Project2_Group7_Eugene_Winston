@@ -100,10 +100,10 @@ export default function CommentCard({postData}) {
             <div>
                 <form onSubmit={handleNewCommentSubmit}>
                     <textarea
-                        className='border border-black resize'
+                        className='border border-black resize text-black'
                         value={newComment} onChange={e => setNewComment(e.target.value)}></textarea>
 
-                        <button type='submit' className='border border-black' >Comment</button>
+                        <button type='submit' className='text-lg p-2 border hover:bg-funny-green text-funny-grey font-semibold rounded-lg' >Comment</button>
                 </form>
             </div>
             {postData.reply_count > 0 ? 
