@@ -7,10 +7,10 @@ export default function PostPage() {
   const [postData, setPostData] = useState({});
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = require.context("../assets/BG", true);
-  const imageList = images.keys().map((image) => images(image));
-  const [imageElements, setImageElements] = useState([]);
+  // const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  // const images = require.context("../assets/BG", true);
+  // const imageList = images.keys().map((image) => images(image));
+  // const [imageElements, setImageElements] = useState([]);
   const pathname = useLocation().pathname.slice(1);
   const apiGetPostData =
     process.env.REACT_APP_API_LINK + "/postUrl/" + pathname;
@@ -50,18 +50,18 @@ export default function PostPage() {
 
   useEffect(() => {
     getPostData();
-    const preloadedImages = imageList.map((src) => {
-      const image = new Image();
-      image.src = src;
-      return image;
-    });
-    setImageElements(preloadedImages);
+    // const preloadedImages = imageList.map((src) => {
+    //   const image = new Image();
+    //   image.src = src;
+    //   return image;
+    // });
+    // setImageElements(preloadedImages);
 
-    const imageChangeInterval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageList.length);
-    }, 1000);
+    // const imageChangeInterval = setInterval(() => {
+    //   setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageList.length);
+    // }, 1000);
 
-    return () => clearInterval(imageChangeInterval);
+    // return () => clearInterval(imageChangeInterval);
   }, []);
 
   const AllComments = () => {
@@ -105,12 +105,12 @@ export default function PostPage() {
     <div>
       <Header />
 
-      <div
+      {/* <div
         className="bg-repeat bg-[image:var(--image-url)] min-h-screen"
         style={{
           "--image-url": `url(${imageList[currentImageIndex]})`,
         }}
-      >
+      > */}
         <div className="p-3 px-10">
           <div className="">
             <div className="border-funny-yellow p-3 px-10 border-8 rounded-lg bg-black">
@@ -156,6 +156,6 @@ export default function PostPage() {
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   );
 }

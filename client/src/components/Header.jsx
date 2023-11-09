@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import Login from '../pages/Login';
+import NewPost from '../pages/NewPost';
 
 export default function Header() {
   const [isValid, setIsValid] = useState(false);
@@ -68,21 +69,23 @@ export default function Header() {
       <div className='col-start-3 flex justify-end mr-10'>
         <button
           className='my-5 p-2 border hover:bg-funny-green text-funny-grey font-semibold rounded-lg'
-          onClick={openModal}>
+          onClick={() => openModal('login')}>
           Login
         </button>
       </div>
     );
-  };
+  }
 
-  const PostButton = () => {
+  const NewPostButton = () => {
     return (
       <div className='col-start-3 row-start-1 flex justify-end mr-10'>
-        <button className='my-5 p-2 border hover:bg-funny-green text-funny-grey font-semibold rounded-lg'>
-          <a href='/createPost'>Create Post</a>
+        <button
+          className='my-5 p-2 border hover:bg-funny-green text-funny-grey font-semibold rounded-lg'
+          onClick={() => openModal('newPost')}>
+          Create Post
         </button>
       </div>
-    )
+    );
   }
 
   const SignOutButton = () =>{
@@ -136,20 +139,21 @@ export default function Header() {
       {!isValid && <LoginButton />}
       {isValid && <SignOutButton />}
       {/* Post Button */}
-      {isValid && <PostButton />}
+      {isValid && <NewPostButton />}
       {isValid && <ProfileButton />}
       
       {/* Render the Login modal using React Portals */}
       {showModal && (
-        ReactDOM.createPortal(
-          <div className='fixed top-0 left-0 w-full h-full flex justify-center items-center z-999 modal-overlay' onClick={closeModal}>
-            <div className='rounded shadow-md shadow-black z-1000' onClick={(e) => e.stopPropagation()}>
-              <Login />
-            </div>
-          </div>,
-          document.body
-        )
-      )}
+  ReactDOM.createPortal(
+    <div className='fixed top-0 left-0 w-full h-full flex justify-center items-center z-999 modal-overlay' onClick={closeModal}>
+      <div className='rounded shadow-md shadow-black z-1000' onClick={(e) => e.stopPropagation()}>
+        {activeModal === 'login' && <Login />}
+        {activeModal === 'newPost' && <NewPost closeModal={closeModal} />}
+      </div>
+    </div>,
+    document.body
+  )
+)}
     </div>
   );
 }
